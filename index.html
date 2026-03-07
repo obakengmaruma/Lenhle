@@ -12,8 +12,50 @@
             text-align: center;
             padding: 50px;
             color: #333;
-            overflow-x: hidden; /* Stops the screen from scrolling sideways from confetti */
+            overflow-x: hidden;
+            margin: 0; /* Removes default borders */
         }
+
+        /* --- THE NEW START SCREEN CSS --- */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffe6e6; /* Soft pink background */
+            z-index: 9999; /* Keeps it on top of everything */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-out; /* Makes it fade away smoothly */
+        }
+        
+        .start-screen h2 {
+            color: #d63384;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        #startButton {
+            padding: 15px 40px;
+            font-size: 1.5em;
+            background-color: #d63384;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        #startButton:hover {
+            transform: scale(1.05); /* Button grows slightly when hovered over */
+            background-color: #b52b6e;
+        }
+        /* --- END OF START SCREEN CSS --- */
+
         h1 {
             color: #d63384;
             font-size: 3em;
@@ -52,6 +94,11 @@
 </head>
 <body>
 
+    <div id="startScreen" class="start-screen">
+        <h2>I have a surprise for you...</h2>
+        <button id="startButton">Click to Open 🎁</button>
+    </div>
+
     <h1>Happy Birthday, <span class="bounce-name">Lenhle</span>! 🎂</h1>
     
     <p>I made this special page just for you. I hope you have the most amazing day!</p>
@@ -62,7 +109,7 @@
 
     <div class="music-player">
         <p>🎵 Press play for a special song 🎵</p>
-        <audio controls autoplay loop>
+        <audio id="birthdaySong" controls loop>
             <source src="Bruno Mars - Versace On The Floor.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
@@ -70,15 +117,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        // This tells the browser to fire the confetti as soon as the page loads
-        window.onload = function() {
+        // This listens for when you click the start button
+        document.getElementById('startButton').addEventListener('click', function() {
+            
+            // 1. Play the music immediately
+            var music = document.getElementById("birthdaySong");
+            music.play();
+
+            // 2. Fire the confetti immediately
             confetti({
-                particleCount: 250, // How many pieces of confetti
-                spread: 180, // How wide they spread out
-                origin: { y: 0.1 }, // Starts near the top of the screen
-                colors: ['#d63384', '#800080', '#ffffff', '#ffeb3b'] // Pink, Purple, White, and Yellow
+                particleCount: 250, 
+                spread: 180, 
+                origin: { y: 0.1 }, 
+                colors: ['#d63384', '#800080', '#ffffff', '#ffeb3b'] 
             });
-        };
+
+            // 3. Fade out the start screen
+            var startScreen = document.getElementById('startScreen');
+            startScreen.style.opacity = '0';
+            
+            // Remove the start screen completely after 1 second (so you can click the stuff behind it)
+            setTimeout(function() {
+                startScreen.style.display = 'none';
+            }, 1000); 
+        });
     </script>
-    </body>
+
+</body>
 </html>
