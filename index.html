@@ -1,10 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Website</title>
+    <title>Happy Birthday!</title>
+    <style>
+        body {
+            background-color: #ffe6e6; /* Soft pink background */
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 50px;
+            color: #333;
+        }
+        h1 {
+            color: #d63384;
+            font-size: 3em;
+        }
+        .photo-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px; /* Gives the photo soft, rounded edges */
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+            margin: 20px 0;
+        }
+        .music-player {
+            margin-top: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <p>My GitHub-hosted website is live.</p>
+
+    <h1>Happy Birthday, [Her Name]! 🎂</h1>
+    <p>I made this special page just for you. I hope you have the most amazing day!</p>
+
+    <div class="photo-container">
+        <img src="your-photo.jpg" alt="A lovely memory of us" width="500">
+    </div>
+
+    <div class="music-player">
+        <p>🎵 Press play for a special song 🎵</p>
+        <audio controls autoplay loop>
+            <source src="your-song.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
 </body>
 </html>
