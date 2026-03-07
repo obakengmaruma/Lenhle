@@ -3,6 +3,7 @@
 <head>
     <title>Happy Birthday!</title>
     <style>
+        /* --- BACKGROUND AND GENERAL STYLES --- */
         body {
             background-image: url('background.jpeg');
             background-size: cover; 
@@ -10,51 +11,48 @@
             background-attachment: fixed;
             font-family: 'Arial', sans-serif;
             text-align: center;
-            padding: 50px;
             color: #333;
-            overflow-x: hidden;
             margin: 0; /* Removes default borders */
+            overflow-x: hidden; 
         }
 
-        /* --- THE NEW START SCREEN CSS --- */
-        .start-screen {
-            position: fixed;
+        /* --- THE START SCREEN STYLES --- */
+        #start-screen {
+            position: fixed; /* Covers the entire screen */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #ffe6e6; /* Soft pink background */
-            z-index: 9999; /* Keeps it on top of everything */
+            background-color: #ffe6e6; /* Soft pink background for the surprise */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease-out; /* Makes it fade away smoothly */
+            z-index: 1000; /* Keeps it on top of everything else */
         }
         
-        .start-screen h2 {
-            color: #d63384;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        #startButton {
-            padding: 15px 40px;
+        #start-btn {
             font-size: 1.5em;
+            padding: 15px 40px;
             background-color: #d63384;
             color: white;
             border: none;
-            border-radius: 30px;
+            border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
         }
 
-        #startButton:hover {
-            transform: scale(1.05); /* Button grows slightly when hovered over */
-            background-color: #b52b6e;
+        #start-btn:hover {
+            background-color: #b02a6b; /* Makes the button darker when hovered over */
+            transform: scale(1.05); /* Makes the button slightly larger when hovered over */
         }
-        /* --- END OF START SCREEN CSS --- */
+
+        /* --- THE MAIN CONTENT STYLES --- */
+        #main-content {
+            display: none; /* Hides the main site until the button is clicked */
+            padding: 50px;
+        }
 
         h1 {
             color: #d63384;
@@ -68,12 +66,8 @@
         }
 
         @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px); 
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
         .photo-container img {
@@ -83,6 +77,7 @@
             box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
             margin: 20px 0;
         }
+
         .music-player {
             margin-top: 30px;
             background-color: white;
@@ -94,52 +89,48 @@
 </head>
 <body>
 
-    <div id="startScreen" class="start-screen">
-        <h2>I have a surprise for you...</h2>
-        <button id="startButton">Click to Open 🎁</button>
+    <div id="start-screen">
+        <h1 style="color: #d63384;">I have a surprise for you...</h1>
+        <button id="start-btn">Click to Open 🎁</button>
     </div>
 
-    <h1>Happy Birthday, <span class="bounce-name">Lenhle</span>! 🎂</h1>
-    
-    <p>I made this special page just for you. I hope you have the most amazing day!</p>
+    <div id="main-content">
+        <h1>Happy Birthday, <span class="bounce-name">Lenhle</span>! 🎂</h1>
+        
+        <p>I made this special page just for you. I hope you have the most amazing day!</p>
 
-    <div class="photo-container">
-        <img src="pic2.jpeg" alt="A lovely picture of ur amazingness" width="500">
-    </div>
+        <div class="photo-container">
+            <img src="pic2.jpeg" alt="A lovely picture of ur amazingness" width="500">
+        </div>
 
-    <div class="music-player">
-        <p>🎵 Press play for a special song 🎵</p>
-        <audio id="birthdaySong" controls loop>
-            <source src="Bruno Mars - Versace On The Floor.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+        <div class="music-player">
+            <p>🎵 Playing our special song 🎵</p>
+            <audio id="birthdaySong" controls loop>
+                <source src="Bruno Mars - Versace On The Floor.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        // This listens for when you click the start button
-        document.getElementById('startButton').addEventListener('click', function() {
+        // This waits for the user to click the "Click to Open" button
+        document.getElementById('start-btn').addEventListener('click', function() {
             
-            // 1. Play the music immediately
-            var music = document.getElementById("birthdaySong");
-            music.play();
+            // 1. Hide the start screen and show the main birthday page
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
 
-            // 2. Fire the confetti immediately
+            // 2. Play the Bruno Mars song immediately
+            document.getElementById('birthdaySong').play();
+
+            // 3. Fire the confetti immediately
             confetti({
                 particleCount: 250, 
                 spread: 180, 
                 origin: { y: 0.1 }, 
                 colors: ['#d63384', '#800080', '#ffffff', '#ffeb3b'] 
             });
-
-            // 3. Fade out the start screen
-            var startScreen = document.getElementById('startScreen');
-            startScreen.style.opacity = '0';
-            
-            // Remove the start screen completely after 1 second (so you can click the stuff behind it)
-            setTimeout(function() {
-                startScreen.style.display = 'none';
-            }, 1000); 
         });
     </script>
 
