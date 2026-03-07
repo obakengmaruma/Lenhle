@@ -5,12 +5,12 @@
     <style>
         /* --- BACKGROUND AND GENERAL STYLES --- */
         body {
-            background-color: #e6ccff; /* Soft blank purple background */
+            background-color: #e6ccff;
             font-family: 'Arial', sans-serif;
             text-align: center;
             color: #333;
             margin: 0; 
-            overflow-x: hidden; 
+            overflow: hidden; /* Keeps things from scrolling weirdly with the floating elements */
         }
 
         /* --- THE START SCREEN STYLES --- */
@@ -20,7 +20,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* The mountain picture is now on the start screen */
             background-image: url('background.jpeg');
             background-size: cover; 
             background-position: center; 
@@ -29,12 +28,14 @@
             justify-content: center;
             align-items: center;
             z-index: 1000; 
+            overflow: hidden; /* Keeps hearts inside this screen */
         }
         
         #start-screen h1 {
             color: white; 
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8); /* Shadow makes it readable over the trees */
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8); 
             font-size: 3em;
+            z-index: 1010; /* Keeps text above the floating hearts */
         }
 
         #start-btn {
@@ -48,6 +49,7 @@
             box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
             transition: 0.3s;
             margin-top: 20px;
+            z-index: 1010; /* Keeps button above the floating hearts */
         }
 
         #start-btn:hover {
@@ -55,10 +57,35 @@
             transform: scale(1.05); 
         }
 
+        /* --- FLOATING HEART STYLES --- */
+        .floating-heart {
+            position: absolute;
+            bottom: -50px; /* Starts just off the bottom of the screen */
+            cursor: pointer;
+            user-select: none; /* Stops the text cursor from appearing */
+            animation: floatUp linear forwards;
+            z-index: 1005; /* Behind text, but above background */
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out; /* Smooth pop effect */
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-110vh); /* Floats past the top of the screen */
+            }
+        }
+
+        /* The class we add when a heart is clicked to make it "pop" */
+        .pop {
+            transform: scale(3) !important;
+            opacity: 0 !important;
+        }
+
         /* --- THE MAIN CONTENT STYLES --- */
         #main-content {
             display: none; 
             padding: 50px;
+            height: 100vh;
+            overflow-y: auto; /* Allows scrolling on the main page if needed */
         }
 
         #main-content h1 {
@@ -67,7 +94,7 @@
         }
 
         .bounce-name {
-            color: #800080; /* Darker purple for her bouncing name */
+            color: #800080; 
             display: inline-block; 
             animation: bounce 1.5s infinite ease-in-out;
         }
@@ -105,7 +132,7 @@
     <div id="main-content">
         <h1>Happy Birthday, <span class="bounce-name">Lenhle</span>! 🎂</h1>
         
-        <p>I made this special page just for you. I hope you have the most amazing day!</p>
+        <p style="font-size: 1.5em; font-style: italic;">I made this special page just for you. I hope you have the most amazing day!</p>
 
         <div class="photo-container">
             <img src="pic2.jpeg" alt="A lovely picture of ur amazingness" width="500">
@@ -114,7 +141,7 @@
         <div class="music-player">
             <p>🎵 Playing our special song 🎵</p>
             <audio id="birthdaySong" controls loop>
-                <source src="Bruno Mars - Versace On The Floor.mp3" type="audio/mpeg">
+                <source src="song.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         </div>
@@ -122,19 +149,63 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
+        // --- HEART GENERATOR CODE ---
+        let heartInterval; // We need to name the timer so we can stop it later
+
+        function createHeart() {
+            const startScreen = document.getElementById('start-screen');
+            const heart = document.createElement('div');
+            
+            // Randomly choose between a few different heart emojis for variety
+            const hearts = ['❤️', '💖', '💕', '💗'];
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            
+            heart.classList.add('floating-heart');
+
+            // Randomize where they start on the left/right and how big they are
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px'; // Between 20px and 40px
+            
+            // Randomize how fast they float up (between 4 and 7 seconds)
+            const duration = Math.random() * 3 + 4;
+            heart.style.animationDuration = duration + 's';
+
+            // The "Pop" click event
+            heart.addEventListener('click', function() {
+                heart.classList.add('pop'); // Triggers the CSS scale and fade
+                setTimeout(() => heart.remove(), 200); // Removes the code after the animation finishes
+            });
+
+            startScreen.appendChild(heart);
+
+            // Clean up the heart code after it floats off screen so the browser doesn't slow down
+            setTimeout(() => {
+                if(heart.parentElement) {
+                    heart.remove();
+                }
+            }, duration * 1000);
+        }
+
+        // Start creating a new heart every 400 milliseconds!
+        heartInterval = setInterval(createHeart, 400);
+
+        // --- THE START BUTTON CODE ---
         document.getElementById('start-btn').addEventListener('click', function() {
             
-            // 1. Hide the start screen and show the main birthday page
+            // 1. Stop making new hearts!
+            clearInterval(heartInterval);
+
+            // 2. Hide the start screen and show the main birthday page
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
 
-            // 2. Play the song immediately
+            // 3. Play the song immediately
             var audio = document.getElementById('birthdaySong');
             audio.play().catch(function(error) {
                 console.log("Browser still blocked audio:", error);
             });
 
-            // 3. Fire the confetti immediately
+            // 4. Fire the confetti immediately
             confetti({
                 particleCount: 250, 
                 spread: 180, 
