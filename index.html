@@ -5,32 +5,38 @@
     <style>
         /* --- BACKGROUND AND GENERAL STYLES --- */
         body {
-            background-image: url('background.jpeg');
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed;
+            background-color: #e6ccff; /* Soft blank purple background */
             font-family: 'Arial', sans-serif;
             text-align: center;
             color: #333;
-            margin: 0; /* Removes default borders */
+            margin: 0; 
             overflow-x: hidden; 
         }
 
         /* --- THE START SCREEN STYLES --- */
         #start-screen {
-            position: fixed; /* Covers the entire screen */
+            position: fixed; 
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #ffe6e6; /* Soft pink background for the surprise */
+            /* The mountain picture is now on the start screen */
+            background-image: url('background.jpeg');
+            background-size: cover; 
+            background-position: center; 
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Keeps it on top of everything else */
+            z-index: 1000; 
         }
         
+        #start-screen h1 {
+            color: white; 
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8); /* Shadow makes it readable over the trees */
+            font-size: 3em;
+        }
+
         #start-btn {
             font-size: 1.5em;
             padding: 15px 40px;
@@ -39,28 +45,29 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
             transition: 0.3s;
+            margin-top: 20px;
         }
 
         #start-btn:hover {
-            background-color: #b02a6b; /* Makes the button darker when hovered over */
-            transform: scale(1.05); /* Makes the button slightly larger when hovered over */
+            background-color: #b02a6b; 
+            transform: scale(1.05); 
         }
 
         /* --- THE MAIN CONTENT STYLES --- */
         #main-content {
-            display: none; /* Hides the main site until the button is clicked */
+            display: none; 
             padding: 50px;
         }
 
-        h1 {
+        #main-content h1 {
             color: #d63384;
             font-size: 3em;
         }
 
         .bounce-name {
-            color: purple;
+            color: #800080; /* Darker purple for her bouncing name */
             display: inline-block; 
             animation: bounce 1.5s infinite ease-in-out;
         }
@@ -84,13 +91,14 @@
             padding: 20px;
             border-radius: 10px;
             display: inline-block;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
 
     <div id="start-screen">
-        <h1 style="color: #d63384;">I have a surprise for you...</h1>
+        <h1>I have a surprise for you...</h1>
         <button id="start-btn">Click to Open 🎁</button>
     </div>
 
@@ -106,7 +114,7 @@
         <div class="music-player">
             <p>🎵 Playing our special song 🎵</p>
             <audio id="birthdaySong" controls loop>
-                <source src="Bruno Mars - Versace On The Floor.mp3" type="audio/mpeg">
+                <source src="song.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         </div>
@@ -114,15 +122,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        // This waits for the user to click the "Click to Open" button
         document.getElementById('start-btn').addEventListener('click', function() {
             
             // 1. Hide the start screen and show the main birthday page
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
 
-            // 2. Play the Bruno Mars song immediately
-            document.getElementById('birthdaySong').play();
+            // 2. Play the song immediately
+            var audio = document.getElementById('birthdaySong');
+            audio.play().catch(function(error) {
+                console.log("Browser still blocked audio:", error);
+            });
 
             // 3. Fire the confetti immediately
             confetti({
