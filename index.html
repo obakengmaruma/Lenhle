@@ -2,8 +2,11 @@
 <html>
 <head>
     <title>Happy Birthday!</title>
+
+    <!-- ✍🏽 Handwritten Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+
     <style>
-        /* --- BACKGROUND AND GENERAL STYLES --- */
         body {
             background-color: #e6ccff;
             font-family: 'Arial', sans-serif;
@@ -13,7 +16,6 @@
             overflow: hidden;
         }
 
-        /* --- THE START SCREEN STYLES --- */
         #start-screen {
             position: fixed; 
             top: 0;
@@ -57,7 +59,6 @@
             transform: scale(1.05); 
         }
 
-        /* --- FLOATING HEART STYLES --- */
         .floating-heart {
             position: absolute;
             bottom: -50px;
@@ -69,9 +70,7 @@
         }
 
         @keyframes floatUp {
-            to {
-                transform: translateY(-110vh);
-            }
+            to { transform: translateY(-110vh); }
         }
 
         .pop {
@@ -79,7 +78,6 @@
             opacity: 0 !important;
         }
 
-        /* --- MAIN CONTENT --- */
         #main-content {
             display: none; 
             padding: 50px;
@@ -103,12 +101,57 @@
             50% { transform: translateY(-20px); }
         }
 
+        /* --- PHOTO + LETTER STACK --- */
+        .photo-letter-wrapper {
+            position: relative;
+            width: 500px;
+            margin: 20px auto;
+        }
+
         .photo-container img {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
             border-radius: 15px; 
             box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
-            margin: 20px 0;
+            transition: opacity 2s ease;
+        }
+
+        /* 📜 PAPER NOTE STYLE */
+        .letter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 90%;
+            height: 90%;
+            padding: 25px;
+            background: linear-gradient(135deg, #fffdf7, #fdf1e6);
+            border-radius: 10px;
+            box-shadow: 
+                0 10px 25px rgba(0,0,0,0.25),
+                inset 0 0 10px rgba(0,0,0,0.05);
+            text-align: left;
+            opacity: 0;
+            transition: opacity 2s ease, transform 1s ease;
+            overflow-y: auto;
+
+            /* ✨ slight tilt like real paper */
+            transform: rotate(-2deg) scale(0.95);
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .letter.show {
+            transform: rotate(0deg) scale(1);
+        }
+
+        .letter h2 {
+            text-align: center;
+            color: #d63384;
+            font-size: 1.8em;
+        }
+
+        .letter p {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #444;
         }
 
         .music-player {
@@ -118,37 +161,6 @@
             border-radius: 10px;
             display: inline-block;
             box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
-        }
-
-        /* --- LETTER STYLES --- */
-        .letter {
-            display: none; /* Hidden initially */
-            margin-top: 40px;
-            padding: 25px;
-            background: #fff0f6;
-            border-radius: 15px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
-            text-align: left;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        .letter h2 {
-            text-align: center;
-            color: #d63384;
-        }
-
-        .letter p {
-            font-size: 1.2em;
-            line-height: 1.6;
-            color: #444;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -167,8 +179,29 @@
             I made this special page just for you. I hope you have the most amazing day!
         </p>
 
-        <div class="photo-container">
-            <img src="pic2.jpeg" alt="A lovely picture of ur amazingness" width="500">
+        <div class="photo-letter-wrapper">
+            
+            <div class="photo-container">
+                <img id="birthdayPhoto" src="pic2.jpeg">
+            </div>
+
+            <div class="letter" id="letter">
+                <h2>💌 A Letter For You</h2>
+                <p>
+                    My dearest Lenhle,<br><br>
+
+                    From the moment you came into my life, everything felt a little brighter. 
+                    Today is all about celebrating you — your smile, your kindness, and the amazing person you are.<br><br>
+
+                    I just want you to know how much you mean to me. You deserve all the happiness 
+                    in the world, not just today but every single day.<br><br>
+
+                    Thank you for being you. I’m really lucky to have you in my life. ❤️<br><br>
+
+                    Happy Birthday once again, my love. 🎂✨
+                </p>
+            </div>
+
         </div>
 
         <div class="music-player">
@@ -176,24 +209,6 @@
             <audio id="birthdaySong" controls loop>
                 <source src="Ttrack.mp3" type="audio/mpeg">
             </audio>
-        </div>
-
-        <!-- 💌 LETTER -->
-        <div class="letter">
-            <h2>💌 A Letter For You</h2>
-            <p>
-                My dearest Lenhle,<br><br>
-
-                From the moment you came into my life, everything felt a little brighter. 
-                Today is all about celebrating you — your smile, your kindness, and the amazing person you are.<br><br>
-
-                I just want you to know how much you mean to me. You deserve all the happiness 
-                in the world, not just today but every single day.<br><br>
-
-                Thank you for being you. I’m really lucky to have you in my life. ❤️<br><br>
-
-                Happy Birthday once again, my love. 🎂✨
-            </p>
         </div>
     </div>
 
@@ -224,9 +239,7 @@
             startScreen.appendChild(heart);
 
             setTimeout(() => {
-                if(heart.parentElement) {
-                    heart.remove();
-                }
+                if(heart.parentElement) heart.remove();
             }, duration * 1000);
         }
 
@@ -240,20 +253,20 @@
             document.getElementById('main-content').style.display = 'block';
 
             var audio = document.getElementById('birthdaySong');
-            audio.play().catch(function(error) {
-                console.log("Browser blocked audio:", error);
-            });
+            audio.play().catch(() => {});
 
             confetti({
                 particleCount: 250, 
                 spread: 180, 
-                origin: { y: 0.1 }, 
-                colors: ['#d63384', '#800080', '#ffffff', '#ffeb3b'] 
+                origin: { y: 0.1 }
             });
 
-            /* 💌 SHOW LETTER AFTER 3 SECONDS */
             setTimeout(() => {
-                document.querySelector('.letter').style.display = 'block';
+                document.getElementById('birthdayPhoto').style.opacity = '0';
+                
+                const letter = document.getElementById('letter');
+                letter.style.opacity = '1';
+                letter.classList.add('show');
             }, 3000);
         });
     </script>
