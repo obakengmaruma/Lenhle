@@ -10,7 +10,7 @@
             text-align: center;
             color: #333;
             margin: 0; 
-            overflow: hidden; /* Keeps things from scrolling weirdly with the floating elements */
+            overflow: hidden;
         }
 
         /* --- THE START SCREEN STYLES --- */
@@ -28,14 +28,14 @@
             justify-content: center;
             align-items: center;
             z-index: 1000; 
-            overflow: hidden; /* Keeps hearts inside this screen */
+            overflow: hidden;
         }
         
         #start-screen h1 {
             color: white; 
             text-shadow: 2px 2px 8px rgba(0,0,0,0.8); 
             font-size: 3em;
-            z-index: 1010; /* Keeps text above the floating hearts */
+            z-index: 1010;
         }
 
         #start-btn {
@@ -49,7 +49,7 @@
             box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
             transition: 0.3s;
             margin-top: 20px;
-            z-index: 1010; /* Keeps button above the floating hearts */
+            z-index: 1010;
         }
 
         #start-btn:hover {
@@ -60,32 +60,31 @@
         /* --- FLOATING HEART STYLES --- */
         .floating-heart {
             position: absolute;
-            bottom: -50px; /* Starts just off the bottom of the screen */
+            bottom: -50px;
             cursor: pointer;
-            user-select: none; /* Stops the text cursor from appearing */
+            user-select: none;
             animation: floatUp linear forwards;
-            z-index: 1005; /* Behind text, but above background */
-            transition: transform 0.2s ease-out, opacity 0.2s ease-out; /* Smooth pop effect */
+            z-index: 1005;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
         }
 
         @keyframes floatUp {
             to {
-                transform: translateY(-110vh); /* Floats past the top of the screen */
+                transform: translateY(-110vh);
             }
         }
 
-        /* The class we add when a heart is clicked to make it "pop" */
         .pop {
             transform: scale(3) !important;
             opacity: 0 !important;
         }
 
-        /* --- THE MAIN CONTENT STYLES --- */
+        /* --- MAIN CONTENT --- */
         #main-content {
             display: none; 
             padding: 50px;
             height: 100vh;
-            overflow-y: auto; /* Allows scrolling on the main page if needed */
+            overflow-y: auto;
         }
 
         #main-content h1 {
@@ -120,6 +119,37 @@
             display: inline-block;
             box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
         }
+
+        /* --- LETTER STYLES --- */
+        .letter {
+            display: none; /* Hidden initially */
+            margin-top: 40px;
+            padding: 25px;
+            background: #fff0f6;
+            border-radius: 15px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+            text-align: left;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .letter h2 {
+            text-align: center;
+            color: #d63384;
+        }
+
+        .letter p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -133,7 +163,9 @@
     <div id="main-content">
         <h1>Happy Birthday, <span class="bounce-name">Lenhle</span>! 🎂</h1>
         
-        <p style="font-size: 1.5em; font-style: italic;">I made this special page just for you. I hope you have the most amazing day!</p>
+        <p style="font-size: 1.5em; font-style: italic;">
+            I made this special page just for you. I hope you have the most amazing day!
+        </p>
 
         <div class="photo-container">
             <img src="pic2.jpeg" alt="A lovely picture of ur amazingness" width="500">
@@ -143,43 +175,54 @@
             <p>🎵 Playing A special song 🎵</p>
             <audio id="birthdaySong" controls loop>
                 <source src="Ttrack.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
             </audio>
+        </div>
+
+        <!-- 💌 LETTER -->
+        <div class="letter">
+            <h2>💌 A Letter For You</h2>
+            <p>
+                My dearest Lenhle,<br><br>
+
+                From the moment you came into my life, everything felt a little brighter. 
+                Today is all about celebrating you — your smile, your kindness, and the amazing person you are.<br><br>
+
+                I just want you to know how much you mean to me. You deserve all the happiness 
+                in the world, not just today but every single day.<br><br>
+
+                Thank you for being you. I’m really lucky to have you in my life. ❤️<br><br>
+
+                Happy Birthday once again, my love. 🎂✨
+            </p>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        // --- HEART GENERATOR CODE ---
-        let heartInterval; // We need to name the timer so we can stop it later
+        let heartInterval;
 
         function createHeart() {
             const startScreen = document.getElementById('start-screen');
             const heart = document.createElement('div');
             
-            // Randomly choose between a few different heart emojis for variety
             const hearts = ['❤️', '💖', '💕', '💗'];
             heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
             
             heart.classList.add('floating-heart');
 
-            // Randomize where they start on the left/right and how big they are
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 20) + 'px'; // Between 20px and 40px
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
             
-            // Randomize how fast they float up (between 4 and 7 seconds)
             const duration = Math.random() * 3 + 4;
             heart.style.animationDuration = duration + 's';
 
-            // The "Pop" click event
             heart.addEventListener('click', function() {
-                heart.classList.add('pop'); // Triggers the CSS scale and fade
-                setTimeout(() => heart.remove(), 200); // Removes the code after the animation finishes
+                heart.classList.add('pop');
+                setTimeout(() => heart.remove(), 200);
             });
 
             startScreen.appendChild(heart);
 
-            // Clean up the heart code after it floats off screen so the browser doesn't slow down
             setTimeout(() => {
                 if(heart.parentElement) {
                     heart.remove();
@@ -187,32 +230,31 @@
             }, duration * 1000);
         }
 
-        // Start creating a new heart every 400 milliseconds!
         heartInterval = setInterval(createHeart, 400);
 
-        // --- THE START BUTTON CODE ---
         document.getElementById('start-btn').addEventListener('click', function() {
             
-            // 1. Stop making new hearts!
             clearInterval(heartInterval);
 
-            // 2. Hide the start screen and show the main birthday page
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
 
-            // 3. Play the song immediately
             var audio = document.getElementById('birthdaySong');
             audio.play().catch(function(error) {
-                console.log("Browser still blocked audio:", error);
+                console.log("Browser blocked audio:", error);
             });
 
-            // 4. Fire the confetti immediately
             confetti({
                 particleCount: 250, 
                 spread: 180, 
                 origin: { y: 0.1 }, 
                 colors: ['#d63384', '#800080', '#ffffff', '#ffeb3b'] 
             });
+
+            /* 💌 SHOW LETTER AFTER 3 SECONDS */
+            setTimeout(() => {
+                document.querySelector('.letter').style.display = 'block';
+            }, 3000);
         });
     </script>
 
