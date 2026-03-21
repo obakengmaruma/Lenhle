@@ -3,7 +3,6 @@
 <head>
     <title>Happy Birthday!</title>
 
-    <!-- handwritten font -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
 
     <style>
@@ -59,7 +58,6 @@
             transform: scale(1.05); 
         }
 
-        /* FLOATING HEARTS (UNCHANGED) */
         .floating-heart {
             position: absolute;
             bottom: -50px;
@@ -102,7 +100,6 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* PHOTO + LETTER STACK */
         .photo-letter-wrapper {
             position: relative;
             width: 500px;
@@ -118,7 +115,6 @@
             transition: opacity 2s ease;
         }
 
-        /* PAPER LETTER (UNCHANGED STYLE) */
         .letter {
             position: absolute;
             top: 10px;
@@ -143,7 +139,6 @@
             transform: rotate(0deg) scale(1);
         }
 
-        /* MUSIC PLAYER (UNCHANGED) */
         .music-player {
             margin-top: 30px;
             background-color: white;
@@ -153,7 +148,6 @@
             box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
         }
 
-        /* DONE BUTTON */
         #doneBtn {
             display: none;
             margin-top: 20px;
@@ -166,19 +160,45 @@
             cursor: pointer;
         }
 
-        /* MEMORY PHOTOS */
-        .memory-photo {
+        /* NEW: PHOTO OVERLAY */
+        #photo-overlay {
             position: fixed;
-            width: 150px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 3000;
+            overflow: hidden;
+        }
+
+        .memory-photo {
+            position: absolute;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            object-fit: cover;
             animation: popIn 0.5s ease forwards;
-            z-index: 2000;
+            transition: opacity 2s ease;
+        }
+
+        .fade-out {
+            opacity: 0 !important;
         }
 
         @keyframes popIn {
             from { transform: scale(0.3) rotate(-20deg); opacity: 0; }
             to { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        /* NEW: VIDEO */
+        #finalVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 4000;
         }
     </style>
 </head>
@@ -199,7 +219,17 @@
             <h2>💌 A Letter For You</h2>
             <p>
                 My dearest Lenhle,<br><br>
-                From the moment you came into my life, everything felt brighter...
+                THIS IS YOU <br><br>
+                TURNING 20 🥳🥳🥳<br><br> 
+                from me to you i wanna wish you theeee most happiest birthday ever,<br><br>
+                Things mightve taken a little turn but im happy i got to know you before you this day<br><br>
+                got to show appretiation, and still hope to do wayyy better than this, but baby steps<br><br>
+                I just want you to know how much you mean to me. You deserve all the happiness 
+                    in the world, not just today but every single day<br><br>
+                Thank you for being you. I’m really lucky to have known you in my life. ❤️<br><br>
+
+                    Happy Birthday once again, Pookie❤️. 🎂✨
+                p.s i really hope by this time i out here referring to you babe🥺❤️
             </p>
         </div>
 
@@ -215,12 +245,18 @@
     <button id="doneBtn">Done Reading ❤️</button>
 </div>
 
+<!-- NEW ELEMENTS -->
+<div id="photo-overlay"></div>
+
+<video id="finalVideo">
+    <source src="vid1.mp4" type="video/mp4">
+</video>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
 let heartInterval;
 
-/* HEARTS STILL WORK */
 function createHeart() {
     const startScreen = document.getElementById('start-screen');
     const heart = document.createElement('div');
@@ -267,28 +303,58 @@ document.getElementById('start-btn').onclick = function(){
     },3000);
 };
 
-/* PHOTO EXPLOSION */
-const photos = ["pic1.jpeg","pic2.jpeg","pic3.jpeg","pic4.jpeg"];
-
 document.getElementById('doneBtn').onclick = function(){
 
-    confetti({particleCount:300,spread:200});
+    const overlay = document.getElementById('photo-overlay');
+    overlay.style.display = "block";
+
+    const photos = ["pic3.jpeg",
+                    "pic4.jpeg",
+                    "pic1.jpeg",
+                    "pic7.jpeg",
+                    "pic6.jpeg",
+                    "pic5.jpeg"
+                   ];
+
+    let createdPhotos = [];
 
     let i=0;
     let interval=setInterval(()=>{
+
         const img=document.createElement('img');
         img.src=photos[Math.floor(Math.random()*photos.length)];
         img.className="memory-photo";
 
-        img.style.top=Math.random()*90+"vh";
-        img.style.left=Math.random()*90+"vw";
+        img.style.top=Math.random()*100+"%";
+        img.style.left=Math.random()*100+"%";
 
-        document.body.appendChild(img);
+        const size = Math.random()*200+100;
+        img.style.width=size+"px";
+        img.style.height=size+"px";
+
+        overlay.appendChild(img);
+        createdPhotos.push(img);
 
         i++;
-        if(i>25) clearInterval(interval);
+        if(i>40){
+            clearInterval(interval);
 
-    },200);
+            // 🌫️ FADE OUT PHOTOS
+            setTimeout(()=>{
+                createdPhotos.forEach(p => p.classList.add('fade-out'));
+
+                // 🎥 SHOW VIDEO AFTER FADE
+                setTimeout(()=>{
+                    overlay.style.display="none";
+                    const video=document.getElementById('finalVideo');
+                    video.style.display="block";
+                    video.play();
+                },2000);
+
+            },1500);
+        }
+
+    },100);
 };
 </script>
 
