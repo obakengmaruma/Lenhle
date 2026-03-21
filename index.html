@@ -3,6 +3,7 @@
 <head>
     <title>Happy Birthday!</title>
 
+    <!-- handwritten font -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
 
     <style>
@@ -10,53 +11,114 @@
             background-color: #e6ccff;
             font-family: 'Arial', sans-serif;
             text-align: center;
-            margin: 0;
+            color: #333;
+            margin: 0; 
             overflow: hidden;
         }
 
+        #start-screen {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('background.jpeg');
+            background-size: cover; 
+            background-position: center; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; 
+            overflow: hidden;
+        }
+        
+        #start-screen h1 {
+            color: white; 
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8); 
+            font-size: 3em;
+            z-index: 1010;
+        }
+
+        #start-btn {
+            font-size: 1.5em;
+            padding: 15px 40px;
+            background-color: #d63384;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
+            transition: 0.3s;
+            margin-top: 20px;
+            z-index: 1010;
+        }
+
+        #start-btn:hover {
+            background-color: #b02a6b; 
+            transform: scale(1.05); 
+        }
+
+        /* FLOATING HEARTS (UNCHANGED) */
+        .floating-heart {
+            position: absolute;
+            bottom: -50px;
+            cursor: pointer;
+            user-select: none;
+            animation: floatUp linear forwards;
+            z-index: 1005;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        }
+
+        @keyframes floatUp {
+            to { transform: translateY(-110vh); }
+        }
+
+        .pop {
+            transform: scale(3) !important;
+            opacity: 0 !important;
+        }
+
         #main-content {
-            display: none;
+            display: none; 
             padding: 50px;
             height: 100vh;
             overflow-y: auto;
         }
 
-        #start-screen {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: url('background.jpeg') center/cover;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        #main-content h1 {
+            color: #d63384;
+            font-size: 3em;
         }
 
-        #start-btn {
-            padding: 15px 40px;
-            font-size: 1.5em;
-            background: #d63384;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
+        .bounce-name {
+            color: #800080; 
+            display: inline-block; 
+            animation: bounce 1.5s infinite ease-in-out;
         }
 
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* PHOTO + LETTER STACK */
         .photo-letter-wrapper {
             position: relative;
             width: 500px;
-            margin: auto;
+            margin: 20px auto;
         }
 
         #birthdayPhoto {
             width: 100%;
-            border-radius: 15px;
-            z-index: 2;
+            border-radius: 15px; 
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
             position: relative;
+            z-index: 2;
             transition: opacity 2s ease;
         }
 
+        /* PAPER LETTER (UNCHANGED STYLE) */
         .letter {
             position: absolute;
             top: 10px;
@@ -66,15 +128,32 @@
             padding: 25px;
             background: linear-gradient(135deg, #fffdf7, #fdf1e6);
             border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25),
+                        inset 0 0 10px rgba(0,0,0,0.05);
+            text-align: left;
             opacity: 0;
-            transition: 2s;
+            transition: opacity 2s ease, transform 1s ease;
+            overflow-y: auto;
+            transform: rotate(-2deg) scale(0.95);
             font-family: 'Dancing Script', cursive;
             z-index: 1;
         }
 
-        .letter.show { opacity: 1; }
+        .letter.show {
+            transform: rotate(0deg) scale(1);
+        }
 
-        /* ❤️ DONE BUTTON */
+        /* MUSIC PLAYER (UNCHANGED) */
+        .music-player {
+            margin-top: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* DONE BUTTON */
         #doneBtn {
             display: none;
             margin-top: 20px;
@@ -87,24 +166,19 @@
             cursor: pointer;
         }
 
-        /* 📸 FLOATING PHOTOS */
+        /* MEMORY PHOTOS */
         .memory-photo {
             position: fixed;
             width: 150px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             animation: popIn 0.5s ease forwards;
+            z-index: 2000;
         }
 
         @keyframes popIn {
-            from {
-                transform: scale(0.3) rotate(-20deg);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
+            from { transform: scale(0.3) rotate(-20deg); opacity: 0; }
+            to { transform: scale(1) rotate(0); opacity: 1; }
         }
     </style>
 </head>
@@ -112,23 +186,30 @@
 <body>
 
 <div id="start-screen">
-    <h1 style="color:white;">I have a surprise for you...</h1>
-    <button id="start-btn">Click to Open 🎁</button>
+    <h1>I have a surprise for you...</h1>
+    <h1>TAP THE HEARTS❤️❤️</h1>
+    <button id="start-btn">Click to Open 😁🎁</button>
 </div>
 
 <div id="main-content">
-    <h1>Happy Birthday Lenhle 🎂</h1>
+    <h1>Happy Birthday, <span class="bounce-name">Lenhle</span>! 🎂</h1>
 
     <div class="photo-letter-wrapper">
         <div class="letter" id="letter">
+            <h2>💌 A Letter For You</h2>
             <p>
                 My dearest Lenhle,<br><br>
-                You mean the world to me... ❤️<br><br>
-                Happy Birthday 🎂
+                From the moment you came into my life, everything felt brighter...
             </p>
         </div>
 
         <img id="birthdayPhoto" src="pic2.jpeg">
+    </div>
+
+    <div class="music-player">
+        <audio id="birthdaySong" controls loop>
+            <source src="Ttrack.mp3" type="audio/mpeg">
+        </audio>
     </div>
 
     <button id="doneBtn">Done Reading ❤️</button>
@@ -137,51 +218,77 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-document.getElementById('start-btn').onclick = function() {
+let heartInterval;
 
-    document.getElementById('start-screen').style.display = 'none';
-    document.getElementById('main-content').style.display = 'block';
+/* HEARTS STILL WORK */
+function createHeart() {
+    const startScreen = document.getElementById('start-screen');
+    const heart = document.createElement('div');
 
-    setTimeout(() => {
+    const hearts = ['❤️','💖','💕','💗'];
+    heart.innerHTML = hearts[Math.floor(Math.random()*hearts.length)];
+
+    heart.classList.add('floating-heart');
+    heart.style.left = Math.random()*100 + 'vw';
+    heart.style.fontSize = (Math.random()*20+20)+'px';
+
+    const duration = Math.random()*3+4;
+    heart.style.animationDuration = duration+'s';
+
+    heart.onclick = () => {
+        heart.classList.add('pop');
+        setTimeout(()=>heart.remove(),200);
+    };
+
+    startScreen.appendChild(heart);
+
+    setTimeout(()=>{ if(heart.parentElement) heart.remove(); }, duration*1000);
+}
+
+heartInterval = setInterval(createHeart,400);
+
+document.getElementById('start-btn').onclick = function(){
+
+    clearInterval(heartInterval);
+
+    document.getElementById('start-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+
+    document.getElementById('birthdaySong').play().catch(()=>{});
+
+    confetti({particleCount:250,spread:180});
+
+    setTimeout(()=>{
+        document.getElementById('letter').style.opacity='1';
         document.getElementById('letter').classList.add('show');
-        document.getElementById('birthdayPhoto').style.opacity = '0.3';
+        document.getElementById('birthdayPhoto').style.opacity='0.4';
 
-        // show button after letter appears
-        document.getElementById('doneBtn').style.display = 'inline-block';
-    }, 3000);
+        document.getElementById('doneBtn').style.display='inline-block';
+    },3000);
 };
 
+/* PHOTO EXPLOSION */
+const photos = ["pic1.jpeg","pic2.jpeg","pic3.jpeg","pic4.jpeg"];
 
-/* 📸 PHOTO EXPLOSION */
-const photos = [
-    "pic6.jpeg",
-    "pic3.jpeg",
-    "pic5.jpeg",
-    "pic1.jpeg",
-    "pic7.jpeg"
-];
+document.getElementById('doneBtn').onclick = function(){
 
-document.getElementById('doneBtn').onclick = function() {
+    confetti({particleCount:300,spread:200});
 
-    confetti({ particleCount: 300, spread: 200 });
+    let i=0;
+    let interval=setInterval(()=>{
+        const img=document.createElement('img');
+        img.src=photos[Math.floor(Math.random()*photos.length)];
+        img.className="memory-photo";
 
-    let i = 0;
-
-    let interval = setInterval(() => {
-
-        const img = document.createElement('img');
-        img.src = photos[Math.floor(Math.random() * photos.length)];
-        img.className = "memory-photo";
-
-        img.style.top = Math.random() * 90 + "vh";
-        img.style.left = Math.random() * 90 + "vw";
+        img.style.top=Math.random()*90+"vh";
+        img.style.left=Math.random()*90+"vw";
 
         document.body.appendChild(img);
 
         i++;
-        if (i > 20) clearInterval(interval);
+        if(i>25) clearInterval(interval);
 
-    }, 200);
+    },200);
 };
 </script>
 
