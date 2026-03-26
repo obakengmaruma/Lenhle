@@ -2,16 +2,16 @@
 <html>
 <head>
     <title>Happy Birthday!</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
-
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            margin: 0;
-            font-family: Arial;
-            background: #5a2a82; /* PURPLE BACKGROUND */
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: #1c1c1e;
             overflow: hidden;
             text-align: center;
+            color: white;
         }
 
         /* START SCREEN */
@@ -24,56 +24,193 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            z-index: 100;
+        }
+
+        #start-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+        }
+
+        #start-screen h1, #start-btn {
+            position: relative;
+            z-index: 1;
+        }
+
+        #start-screen h1 {
+            color: white;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: -0.3px;
         }
 
         #start-btn {
-            padding: 15px 40px;
-            font-size: 1.5em;
+            padding: 14px 44px;
+            font-size: 1.1em;
+            font-weight: 600;
             border-radius: 50px;
-            background: #ff4da6;
+            background: #fc3c44;
             border: none;
             color: white;
             cursor: pointer;
+            letter-spacing: -0.2px;
+            transition: transform 0.1s, opacity 0.1s;
         }
 
-        /* MAIN CONTENT */
+        #start-btn:active { transform: scale(0.96); opacity: 0.85; }
+
+        /* MAIN CONTENT — Apple Music player layout */
         #main-content {
             display: none;
-            padding-top: 40px;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+            background: linear-gradient(180deg, #2c1a3e 0%, #1c1c1e 60%);
         }
 
-        /* MUSIC CARD */
-        .music-card {
-            width: 300px;
-            margin: auto;
-            background: #2e1a47;
-            border-radius: 20px;
-            padding: 20px;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
-
-        .music-card img {
+        /* ARTWORK */
+        .artwork-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 40px 20px;
             width: 100%;
-            border-radius: 15px;
         }
+
+        .artwork-container {
+            position: relative;
+            width: min(340px, 85vw);
+            aspect-ratio: 1;
+        }
+
+        #birthdayPhoto, .letter {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .letter {
+            background: #fff9f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 28px;
+            font-family: 'Dancing Script', cursive;
+            color: #3a2a1a;
+            font-size: 1.25em;
+            line-height: 1.7;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .letter.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #birthdayPhoto.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* TRACK INFO */
+        .track-info {
+            width: min(380px, 92vw);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+
+        .track-text { text-align: left; }
 
         .song-title {
-            margin-top: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 1.15em;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
         }
 
         .artist {
-            color: #aaa;
-            font-size: 0.9em;
+            font-size: 0.95em;
+            color: #fc3c44;
+            font-weight: 500;
+            margin-top: 2px;
         }
 
-        .controls {
-            margin-top: 20px;
+        .track-actions {
             display: flex;
-            justify-content: space-around;
-            font-size: 2em;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .track-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: rgba(255,255,255,0.5);
+            font-size: 1.3em;
+            transition: color 0.2s;
+        }
+
+        .track-actions button:active { color: white; }
+
+        /* PROGRESS BAR */
+        .progress-section {
+            width: min(380px, 92vw);
+            margin-bottom: 14px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .time-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7em;
+            color: rgba(255,255,255,0.4);
+            margin-top: 6px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        /* CONTROLS */
+        .controls {
+            width: min(380px, 92vw);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
         }
 
         .controls button {
@@ -81,39 +218,49 @@
             border: none;
             color: white;
             cursor: pointer;
+            padding: 8px;
+            transition: transform 0.1s, opacity 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        input[type="range"] {
-            width: 100%;
-            margin-top: 15px;
+        .controls button:active { transform: scale(0.88); opacity: 0.6; }
+
+        .btn-skip svg { width: 34px; height: 34px; }
+        .btn-play svg { width: 52px; height: 52px; }
+
+        /* VOLUME */
+        .volume-section {
+            width: min(380px, 92vw);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
         }
 
-        /* PHOTO + LETTER */
-        .photo-letter-wrapper {
-            position: relative;
-            width: 300px;
-            margin: 30px auto;
+        .vol-icon { color: rgba(255,255,255,0.45); font-size: 1em; }
+
+        /* BOTTOM ICONS */
+        .bottom-bar {
+            width: min(380px, 92vw);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 4px;
         }
 
-        #birthdayPhoto {
-            width: 100%;
-            border-radius: 15px;
+        .bottom-bar button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 6px;
         }
 
-        .letter {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            display: none;
-            font-family: 'Dancing Script';
-        }
-
-        /* OVERLAY + VIDEO */
+        /* OVERLAYS */
         #photo-overlay {
             position: fixed;
             width: 100%;
@@ -126,6 +273,7 @@
         .memory-photo {
             position: absolute;
             border-radius: 10px;
+            object-fit: cover;
         }
 
         #finalVideo {
@@ -136,49 +284,108 @@
             display: none;
             z-index: 4000;
             opacity: 0;
-            transition: 1.5s;
+            transition: opacity 1.5s;
         }
 
-        #finalVideo.show {
-            opacity: 1;
+        #finalVideo.show { opacity: 1; }
+
+        /* Tap-to-dismiss video */
+        #video-tap {
+            position: fixed;
+            inset: 0;
+            z-index: 4001;
+            display: none;
+            cursor: pointer;
         }
     </style>
 </head>
-
 <body>
 
 <div id="start-screen">
-    <h1 style="color:white;">Tap to Start ❤️</h1>
+    <h1>Tap to Start ❤️</h1>
     <button id="start-btn">Open 🎁</button>
 </div>
 
 <div id="main-content">
 
-    <!-- MUSIC PLAYER UI -->
-    <div class="music-card">
-        <img src="pic2.jpeg">
-
-        <div class="song-title">Happy Birthday Lenhle 🎂❤️</div>
-        <div class="artist">From Me 💖</div>
-
-        <input type="range" id="audioControl" min="0" max="1" step="0.01">
-
-        <div class="controls">
-            <button id="backBtn">⏮</button>
-            <button id="playPauseBtn">⏯</button>
-            <button id="nextBtn">⏭</button>
+    <!-- ARTWORK -->
+    <div class="artwork-wrapper">
+        <div class="artwork-container">
+            <img id="birthdayPhoto" src="pic2.jpeg" alt="Birthday photo">
+            <div class="letter" id="letter">
+                <div style="font-size:1.6em;margin-bottom:12px;">💌</div>
+                Happy Birthday Lenhle ❤️<br><br>
+                You deserve everything beautiful in this world 💖
+            </div>
         </div>
     </div>
 
-    <!-- PHOTO + LETTER -->
-    <div class="photo-letter-wrapper">
-        <img id="birthdayPhoto" src="pic2.jpeg">
-
-        <div class="letter" id="letter">
-            <h3>💌</h3>
-            Happy Birthday Lenhle ❤️<br><br>
-            You deserve everything beautiful in this world 💖
+    <!-- TRACK INFO -->
+    <div class="track-info">
+        <div class="track-text">
+            <div class="song-title">Happy Birthday Lenhle 🎂</div>
+            <div class="artist">From Me 💖</div>
         </div>
+        <div class="track-actions">
+            <button title="Add to library">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+            </button>
+            <button title="More options">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                    <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-section">
+        <input type="range" id="audioControl" min="0" max="1" step="0.01" value="1">
+        <div class="time-row">
+            <span>1:06</span>
+            <span>🎵 Dolby Atmos</span>
+            <span>-1:47</span>
+        </div>
+    </div>
+
+    <!-- PLAYBACK CONTROLS -->
+    <div class="controls">
+        <!-- Back = show photo -->
+        <button class="btn-skip" id="backBtn" title="Back to photo">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/>
+            </svg>
+        </button>
+
+        <!-- Play/Pause = triggers popup -->
+        <button class="btn-play" id="playPauseBtn" title="Play / show memories">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+        </button>
+
+        <!-- Next = show letter -->
+        <button class="btn-skip" id="nextBtn" title="Show letter">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- VOLUME -->
+    <div class="volume-section">
+        <span class="vol-icon">🔉</span>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1" style="flex:1;">
+        <span class="vol-icon">🔊</span>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+        <button>🔀</button>
+        <button>📡</button>
+        <button>≡</button>
     </div>
 
 </div>
@@ -190,89 +397,105 @@
 
 <div id="photo-overlay"></div>
 
-<video id="finalVideo">
+<video id="finalVideo" muted playsinline>
     <source src="vid1.mp4">
 </video>
+<div id="video-tap"></div>
 
 <script>
-let heartInterval;
-
-// START BUTTON
-document.getElementById('start-btn').onclick = function(){
-    document.getElementById('start-screen').style.display='none';
-    document.getElementById('main-content').style.display='block';
-
     const audio = document.getElementById('birthdaySong');
-    audio.play().catch(()=>{});
+    const photo = document.getElementById('birthdayPhoto');
+    const letter = document.getElementById('letter');
+    const playBtn = document.getElementById('playPauseBtn');
 
-    const slider = document.getElementById('audioControl');
-    slider.value = 1;
-    slider.oninput = () => audio.volume = slider.value;
-};
+    const playIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+    const pauseIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
 
-// CONTROLS
-const audio = document.getElementById('birthdaySong');
-const photo = document.getElementById('birthdayPhoto');
-const letter = document.getElementById('letter');
+    /* ── START ── */
+    document.getElementById('start-btn').onclick = function () {
+        document.getElementById('start-screen').style.display = 'none';
+        const mc = document.getElementById('main-content');
+        mc.style.display = 'flex';
 
-document.getElementById('playPauseBtn').onclick = () => {
-    if(audio.paused) audio.play();
-    else audio.pause();
-};
+        audio.play().catch(() => {});
+        playBtn.innerHTML = pauseIcon;
+    };
 
-document.getElementById('nextBtn').onclick = () => {
-    photo.style.display = "none";
-    letter.style.display = "block";
-};
+    /* ── VOLUME SLIDER ── */
+    document.getElementById('audioControl').oninput = function () {
+        audio.volume = this.value;
+        document.getElementById('volumeControl').value = this.value;
+    };
+    document.getElementById('volumeControl').oninput = function () {
+        audio.volume = this.value;
+        document.getElementById('audioControl').value = this.value;
+    };
 
-document.getElementById('backBtn').onclick = () => {
-    photo.style.display = "block";
-    letter.style.display = "none";
-};
+    /* ── PLAY / PAUSE (single click) ── */
+    let clickTimer = null;
+    playBtn.onclick = function () {
+        if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; triggerMemories(); return; }
+        clickTimer = setTimeout(() => {
+            clickTimer = null;
+            if (audio.paused) { audio.play(); playBtn.innerHTML = pauseIcon; }
+            else { audio.pause(); playBtn.innerHTML = playIcon; }
+        }, 250);
+    };
 
-// KEEP YOUR EXPLOSION + VIDEO
-document.getElementById('playPauseBtn').ondblclick = function(){
+    /* ── NEXT → show letter ── */
+    document.getElementById('nextBtn').onclick = function () {
+        photo.classList.add('hidden');
+        letter.classList.add('visible');
+    };
 
-    const overlay = document.getElementById('photo-overlay');
-    overlay.style.display = "block";
+    /* ── BACK → show photo ── */
+    document.getElementById('backBtn').onclick = function () {
+        photo.classList.remove('hidden');
+        letter.classList.remove('visible');
+    };
 
-    const photos = ["pic3.jpeg","pic4.jpeg","pic1.jpeg","pic7.jpeg","pic6.jpeg","pic5.jpeg"];
+    /* ── DOUBLE-CLICK / MEMORIES POPUP ── */
+    function triggerMemories() {
+        const overlay = document.getElementById('photo-overlay');
+        overlay.style.display = 'block';
 
-    let i=0;
-    let interval=setInterval(()=>{
+        const photos = ['pic3.jpeg', 'pic4.jpeg', 'pic1.jpeg', 'pic7.jpeg', 'pic6.jpeg', 'pic5.jpeg'];
+        let i = 0;
+        const interval = setInterval(() => {
+            const img = document.createElement('img');
+            img.src = photos[Math.floor(Math.random() * photos.length)];
+            img.className = 'memory-photo';
+            img.style.top = Math.random() * 90 + '%';
+            img.style.left = Math.random() * 90 + '%';
+            img.style.width = (Math.random() * 200 + 100) + 'px';
+            overlay.appendChild(img);
+            i++;
+            if (i > 40) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    while (overlay.firstChild) overlay.removeChild(overlay.firstChild);
 
-        const img=document.createElement('img');
-        img.src=photos[Math.floor(Math.random()*photos.length)];
-        img.className="memory-photo";
+                    const video = document.getElementById('finalVideo');
+                    const tap = document.getElementById('video-tap');
+                    video.style.display = 'block';
+                    tap.style.display = 'block';
+                    video.currentTime = 0;
+                    setTimeout(() => { video.classList.add('show'); video.play(); }, 100);
 
-        img.style.top=Math.random()*90+"%";
-        img.style.left=Math.random()*90+"%";
-        img.style.width=(Math.random()*200+100)+"px";
-
-        overlay.appendChild(img);
-
-        i++;
-        if(i>40){
-            clearInterval(interval);
-
-            setTimeout(()=>{
-                overlay.style.display="none";
-
-                const video=document.getElementById('finalVideo');
-                video.style.display="block";
-                video.currentTime=0;
-
-                setTimeout(()=>{
-                    video.classList.add("show");
-                    video.play();
-                },100);
-
-            },1500);
-        }
-
-    },100);
-};
+                    /* tap or video end → back to UI */
+                    function returnToUI() {
+                        video.pause();
+                        video.classList.remove('show');
+                        tap.style.display = 'none';
+                        setTimeout(() => { video.style.display = 'none'; }, 1500);
+                    }
+                    tap.onclick = returnToUI;
+                    video.onended = returnToUI;
+                }, 1500);
+            }
+        }, 100);
+    }
 </script>
-
 </body>
 </html>
