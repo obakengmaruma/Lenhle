@@ -31,13 +31,6 @@
             z-index: 1000; 
             overflow: hidden;
         }
-        
-        #start-screen h1 {
-            color: white; 
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8); 
-            font-size: 3em;
-            z-index: 1010;
-        }
 
         #start-btn {
             font-size: 1.5em;
@@ -47,57 +40,22 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
-            transition: 0.3s;
-            margin-top: 20px;
-            z-index: 1010;
-        }
-
-        #start-btn:hover {
-            background-color: #b02a6b; 
-            transform: scale(1.05); 
         }
 
         .floating-heart {
             position: absolute;
             bottom: -50px;
-            cursor: pointer;
-            user-select: none;
             animation: floatUp linear forwards;
-            z-index: 1005;
-            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
         }
 
         @keyframes floatUp {
             to { transform: translateY(-110vh); }
         }
 
-        .pop {
-            transform: scale(3) !important;
-            opacity: 0 !important;
-        }
-
         #main-content {
             display: none; 
             padding: 50px;
             height: 100vh;
-            overflow-y: auto;
-        }
-
-        #main-content h1 {
-            color: #d63384;
-            font-size: 3em;
-        }
-
-        .bounce-name {
-            color: #800080; 
-            display: inline-block; 
-            animation: bounce 1.5s infinite ease-in-out;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
         }
 
         .photo-letter-wrapper {
@@ -109,152 +67,129 @@
         #birthdayPhoto {
             width: 100%;
             border-radius: 15px; 
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
             position: relative;
             z-index: 2;
-            transition: opacity 2s ease;
         }
 
         .letter {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 90%;
-            height: 90%;
-            padding: 25px;
-            background: linear-gradient(135deg, #fffdf7, #fdf1e6);
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25),
-                        inset 0 0 10px rgba(0,0,0,0.05);
-            text-align: left;
-            opacity: 0;
-            transition: opacity 2s ease, transform 1s ease;
-            overflow-y: auto;
-            transform: rotate(-2deg) scale(0.95);
-            font-family: 'Dancing Script', cursive;
-            z-index: 1;
-        }
-
-        .letter.show {
-            transform: rotate(0deg) scale(1);
-        }
-
-        .music-player {
-            margin-top: 30px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
-        }
-
-        #doneBtn {
-            display: none;
-            margin-top: 20px;
-            padding: 12px 30px;
-            font-size: 1.2em;
-            background: #ff4da6;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-
-        /* PHOTO OVERLAY */
-        #photo-overlay {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            padding: 25px;
+            background: linear-gradient(135deg, #fffdf7, #fdf1e6);
+            border-radius: 10px;
+            opacity: 0;
             display: none;
-            z-index: 3000;
-            overflow: hidden;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .letter.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* SIDE CONTROLS */
+        .controls {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2000;
+        }
+
+        .left-controls { left: 20px; }
+        .right-controls { right: 20px; }
+
+        .control-btn {
+            display: block;
+            margin: 15px 0;
+            font-size: 2em;
+            background: #ff4da6;
+            border: none;
+            border-radius: 50%;
+            padding: 15px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* AUDIO SLIDER ONLY */
+        #audioControl {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+        }
+
+        /* OVERLAY + VIDEO (UNCHANGED) */
+        #photo-overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            display: none;
             background: black;
+            z-index: 3000;
         }
 
         .memory-photo {
             position: absolute;
             border-radius: 10px;
-            object-fit: cover;
-            animation: popIn 0.5s ease forwards;
-            transition: opacity 2s ease;
         }
 
-        .fade-out {
-            opacity: 0 !important;
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.3) rotate(-20deg); opacity: 0; }
-            to { transform: scale(1) rotate(0); opacity: 1; }
-        }
-
-        /* VIDEO */
         #finalVideo {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: none;
             z-index: 4000;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            transition: 1.5s;
         }
 
-        #finalVideo.show {
-            opacity: 1;
-        }
-
-        body.overlay-active {
-            overflow: hidden;
-        }
+        #finalVideo.show { opacity: 1; }
     </style>
 </head>
 
 <body>
 
 <div id="start-screen">
-    <h1>I have a surprise for you...</h1>
-    <h1>TAP THE HEARTS❤️❤️</h1>
-    <button id="start-btn">Click to Open 😁🎁</button>
+    <h1>TAP THE HEARTS ❤️</h1>
+    <button id="start-btn">Start 🎁</button>
 </div>
 
 <div id="main-content">
-    <h1>Happy Birthday, <span class="bounce-name">Lenhle</span>! 🎂</h1>
+    <h1>Happy Birthday Lenhle 🎂</h1>
 
     <div class="photo-letter-wrapper">
+        <img id="birthdayPhoto" src="pic2.jpeg">
+
         <div class="letter" id="letter">
             <h2>💌 A Letter For You</h2>
             <p>
                 My dearest Lenhle,<br><br>
-                THIS IS YOU <br><br>
                 TURNING 20 🥳🥳🥳<br><br> 
-                from me to you i wanna wish you theeee most happiest birthday ever,<br><br>
-                Today is all about celebrating you — your smile❤️, your kindness❤️, and the amazing person you are.<br><br>
-                Im happy i got to know you before you this day<br><br>
-                got to show appretiation, and still hope to do wayyy better than this, but baby steps😘<br><br>
-                You deserve all the happiness in the world, not just today but every single day<br><br>
-               
-                Thank you for being you.❤️<br><br>
-
-                Happy Birthday once again, Pookie❤️. 🎂✨
+                You deserve all the happiness in the world ❤️
             </p>
         </div>
-
-        <img id="birthdayPhoto" src="pic2.jpeg">
     </div>
-
-    <div class="music-player">
-        <audio id="birthdaySong" controls loop>
-            <source src="Ttrack.mp3" type="audio/mpeg">
-        </audio>
-    </div>
-
-    <button id="doneBtn">Done Reading ❤️</button>
 </div>
+
+<!-- CONTROLS -->
+<div class="controls left-controls">
+    <button class="control-btn" id="backBtn">⏮</button>
+</div>
+
+<div class="controls right-controls">
+    <button class="control-btn" id="playPauseBtn">⏯</button>
+    <button class="control-btn" id="nextBtn">⏭</button>
+</div>
+
+<!-- AUDIO (hidden but slider shown) -->
+<audio id="birthdaySong" loop>
+    <source src="Ttrack.mp3" type="audio/mpeg">
+</audio>
+
+<input type="range" id="audioControl" min="0" max="1" step="0.01">
 
 <div id="photo-overlay"></div>
 
@@ -262,110 +197,52 @@
     <source src="vid1.mp4" type="video/mp4">
 </video>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 <script>
 let heartInterval;
 
 function createHeart() {
-    const startScreen = document.getElementById('start-screen');
     const heart = document.createElement('div');
-
-    const hearts = ['❤️','💖','💕','💗'];
-    heart.innerHTML = hearts[Math.floor(Math.random()*hearts.length)];
-
+    heart.innerHTML = "❤️";
     heart.classList.add('floating-heart');
     heart.style.left = Math.random()*100 + 'vw';
-    heart.style.fontSize = (Math.random()*20+20)+'px';
-
-    const duration = Math.random()*3+4;
-    heart.style.animationDuration = duration+'s';
-
-    heart.onclick = () => {
-        heart.classList.add('pop');
-        setTimeout(()=>heart.remove(),200);
-    };
-
-    startScreen.appendChild(heart);
-
-    setTimeout(()=>{ if(heart.parentElement) heart.remove(); }, duration*1000);
+    heart.style.animationDuration = "5s";
+    document.getElementById('start-screen').appendChild(heart);
 }
 
 heartInterval = setInterval(createHeart,400);
 
 document.getElementById('start-btn').onclick = function(){
-
     clearInterval(heartInterval);
-
     document.getElementById('start-screen').style.display='none';
     document.getElementById('main-content').style.display='block';
 
-    document.getElementById('birthdaySong').play().catch(()=>{});
+    const audio = document.getElementById('birthdaySong');
+    audio.play().catch(()=>{});
 
-    confetti({particleCount:250,spread:180});
-
-    setTimeout(()=>{
-        document.getElementById('letter').style.opacity='1';
-        document.getElementById('letter').classList.add('show');
-        document.getElementById('birthdayPhoto').style.opacity='0.4';
-
-        document.getElementById('doneBtn').style.display='inline-block';
-    },3000);
+    // sync slider
+    const slider = document.getElementById('audioControl');
+    slider.oninput = () => audio.volume = slider.value;
+    slider.value = 1;
 };
 
-document.getElementById('doneBtn').onclick = function(){
+// BUTTONS
+const photo = document.getElementById('birthdayPhoto');
+const letter = document.getElementById('letter');
+const audio = document.getElementById('birthdaySong');
 
-    const overlay = document.getElementById('photo-overlay');
-    overlay.style.display = "block";
+document.getElementById('nextBtn').onclick = () => {
+    photo.style.display = "none";
+    letter.classList.add("show");
+};
 
-    document.body.classList.add("overlay-active");
+document.getElementById('backBtn').onclick = () => {
+    photo.style.display = "block";
+    letter.classList.remove("show");
+};
 
-    const photos = ["pic3.jpeg","pic4.jpeg","pic1.jpeg","pic7.jpeg","pic6.jpeg","pic5.jpeg"];
-
-    let createdPhotos = [];
-
-    let i=0;
-    let interval=setInterval(()=>{
-
-        const img=document.createElement('img');
-        img.src=photos[Math.floor(Math.random()*photos.length)];
-        img.className="memory-photo";
-
-        img.style.top=Math.random()*90+"%";
-        img.style.left=Math.random()*90+"%";
-
-        const size = Math.random()*200+100;
-        img.style.width=size+"px";
-        img.style.height=size+"px";
-
-        overlay.appendChild(img);
-        createdPhotos.push(img);
-
-        i++;
-        if(i>40){
-            clearInterval(interval);
-
-            setTimeout(()=>{
-                createdPhotos.forEach(p => p.classList.add('fade-out'));
-
-                setTimeout(()=>{
-                    overlay.style.display="none";
-
-                    const video=document.getElementById('finalVideo');
-                    video.style.display="block";
-                    video.currentTime = 0;
-
-                    setTimeout(()=>{
-                        video.classList.add("show");
-                        video.play();
-                    },100);
-
-                },2000);
-
-            },1500);
-        }
-
-    },100);
+document.getElementById('playPauseBtn').onclick = () => {
+    if(audio.paused) audio.play();
+    else audio.pause();
 };
 </script>
 
