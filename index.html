@@ -160,7 +160,7 @@
             cursor: pointer;
         }
 
-        /* NEW: PHOTO OVERLAY */
+        /* PHOTO OVERLAY */
         #photo-overlay {
             position: fixed;
             top: 0;
@@ -170,6 +170,7 @@
             display: none;
             z-index: 3000;
             overflow: hidden;
+            background: black;
         }
 
         .memory-photo {
@@ -189,7 +190,7 @@
             to { transform: scale(1) rotate(0); opacity: 1; }
         }
 
-        /* NEW: VIDEO */
+        /* VIDEO */
         #finalVideo {
             position: fixed;
             top: 0;
@@ -199,6 +200,16 @@
             object-fit: cover;
             display: none;
             z-index: 4000;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #finalVideo.show {
+            opacity: 1;
+        }
+
+        body.overlay-active {
+            overflow: hidden;
         }
     </style>
 </head>
@@ -223,14 +234,13 @@
                 TURNING 20 🥳🥳🥳<br><br> 
                 from me to you i wanna wish you theeee most happiest birthday ever,<br><br>
                 Today is all about celebrating you — your smile❤️, your kindness❤️, and the amazing person you are.<br><br>
-                Things mightve taken a little turn but im happy i got to know you before you this day<br><br>
+                Im happy i got to know you before you this day<br><br>
                 got to show appretiation, and still hope to do wayyy better than this, but baby steps😘<br><br>
-                I just want you to know how much you mean to me. You deserve all the happiness <br><br>
-                    in the world, not just today but every single day<br><br>
-                Thank you for being you. I’m really lucky to have known you in my life. ❤️<br><br>
+                You deserve all the happiness in the world, not just today but every single day<br><br>
+               
+                Thank you for being you.❤️<br><br>
 
-                    Happy Birthday once again, Pookie❤️. 🎂✨
-                p.s i really hope by this time i out here referring to you babe🥺❤️
+                Happy Birthday once again, Pookie❤️. 🎂✨
             </p>
         </div>
 
@@ -246,7 +256,6 @@
     <button id="doneBtn">Done Reading ❤️</button>
 </div>
 
-<!-- NEW ELEMENTS -->
 <div id="photo-overlay"></div>
 
 <video id="finalVideo">
@@ -309,13 +318,9 @@ document.getElementById('doneBtn').onclick = function(){
     const overlay = document.getElementById('photo-overlay');
     overlay.style.display = "block";
 
-    const photos = ["pic3.jpeg",
-                    "pic4.jpeg",
-                    "pic1.jpeg",
-                    "pic7.jpeg",
-                    "pic6.jpeg",
-                    "pic5.jpeg"
-                   ];
+    document.body.classList.add("overlay-active");
+
+    const photos = ["pic3.jpeg","pic4.jpeg","pic1.jpeg","pic7.jpeg","pic6.jpeg","pic5.jpeg"];
 
     let createdPhotos = [];
 
@@ -326,8 +331,8 @@ document.getElementById('doneBtn').onclick = function(){
         img.src=photos[Math.floor(Math.random()*photos.length)];
         img.className="memory-photo";
 
-        img.style.top=Math.random()*100+"%";
-        img.style.left=Math.random()*100+"%";
+        img.style.top=Math.random()*90+"%";
+        img.style.left=Math.random()*90+"%";
 
         const size = Math.random()*200+100;
         img.style.width=size+"px";
@@ -340,16 +345,21 @@ document.getElementById('doneBtn').onclick = function(){
         if(i>40){
             clearInterval(interval);
 
-            // 🌫️ FADE OUT PHOTOS
             setTimeout(()=>{
                 createdPhotos.forEach(p => p.classList.add('fade-out'));
 
-                // 🎥 SHOW VIDEO AFTER FADE
                 setTimeout(()=>{
                     overlay.style.display="none";
+
                     const video=document.getElementById('finalVideo');
                     video.style.display="block";
-                    video.play();
+                    video.currentTime = 0;
+
+                    setTimeout(()=>{
+                        video.classList.add("show");
+                        video.play();
+                    },100);
+
                 },2000);
 
             },1500);
