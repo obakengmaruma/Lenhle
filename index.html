@@ -112,7 +112,7 @@
             box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
             position: relative;
             z-index: 2;
-            transition: opacity 2s ease;
+            transition: opacity 1.5s ease;
         }
 
         .letter {
@@ -137,14 +137,13 @@
 
         .letter.show {
             transform: rotate(0deg) scale(1);
+            z-index: 5; 
         }
 
-        /* Hiding the music player visual container */
         .music-player {
             display: none; 
         }
 
-        /* NEW PLAY BUTTON STYLING */
         #playBtn {
             display: none;
             margin-top: 20px;
@@ -164,7 +163,6 @@
             transform: scale(1.05); 
         }
 
-        /* NEW: PHOTO OVERLAY */
         #photo-overlay {
             position: fixed;
             top: 0;
@@ -181,7 +179,7 @@
             border-radius: 10px;
             object-fit: cover;
             animation: popIn 0.5s ease forwards;
-            transition: opacity 2s ease;
+            transition: opacity 0.8s ease; /* Slightly faster fade out for photos */
         }
 
         .fade-out {
@@ -193,7 +191,6 @@
             to { transform: scale(1) rotate(0); opacity: 1; }
         }
 
-        /* NEW: VIDEO */
         #finalVideo {
             position: fixed;
             top: 0;
@@ -202,7 +199,10 @@
             height: 100%;
             object-fit: cover;
             display: none;
-            z-index: 4000;
+            z-index: 9999; 
+            background-color: black; 
+            opacity: 0; 
+            transition: opacity 1s ease; /* Updated to handle smooth fade out too */
         }
     </style>
 </head>
@@ -249,7 +249,7 @@
 
 <div id="photo-overlay"></div>
 
-<video id="finalVideo" muted playsinline>
+<video id="finalVideo" muted playsinline autoplay>
     <source src="vid1.mp4" type="video/mp4">
 </video>
 
@@ -299,31 +299,22 @@ document.getElementById('start-btn').onclick = function(){
         document.getElementById('letter').style.opacity='1';
         document.getElementById('letter').classList.add('show');
         
-        // Changed opacity to 0 so the photo completely disappears and the letter replaces it
         document.getElementById('birthdayPhoto').style.opacity='0';
 
         document.getElementById('playBtn').style.display='inline-block';
     },3000);
 };
 
-// Now linked to the new play button
 document.getElementById('playBtn').onclick = function(){
 
     const overlay = document.getElementById('photo-overlay');
     overlay.style.display = "block";
 
-    const photos = ["pic3.jpeg",
-                    "pic4.jpeg",
-                    "pic1.jpeg",
-                    "pic7.jpeg",
-                    "pic6.jpeg",
-                    "pic5.jpeg"
-                   ];
-
+    const photos = ["pic3.jpeg", "pic4.jpeg", "pic1.jpeg", "pic7.jpeg", "pic6.jpeg", "pic5.jpeg"];
     let createdPhotos = [];
+    let i = 0;
 
-    let i=0;
-    let interval=setInterval(()=>{
+    let interval = setInterval(()=>{
 
         const img=document.createElement('img');
         img.src=photos[Math.floor(Math.random()*photos.length)];
@@ -340,26 +331,53 @@ document.getElementById('playBtn').onclick = function(){
         createdPhotos.push(img);
 
         i++;
-        if(i>40){
+        // Changed to 70 for exactly 7 seconds of photos
+        if(i > 70){
             clearInterval(interval);
 
-            // 🌫️ FADE OUT PHOTOS
+            // Immediately start fading out the photos
             setTimeout(()=>{
                 createdPhotos.forEach(p => p.classList.add('fade-out'));
 
-                // 🎥 SHOW VIDEO AFTER FADE
+                // Much shorter delay so the video plays almost instantly
                 setTimeout(()=>{
-                    overlay.style.display="none";
-                    const video=document.getElementById('finalVideo');
-                    video.style.display="block";
-                    video.play();
-                },2000);
+                    overlay.style.display="none"; 
+                    const video = document.getElementById('finalVideo');
+                    video.style.display = "block";
+                    
+                    setTimeout(() => {
+                        video.style.opacity = "1";
+                    }, 50);
 
-            },1500);
+                    let playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log("Browser prevented autoplay:", error);
+                            video.controls = true; 
+                        });
+                    }
+                }, 600); 
+
+            }, 400);
         }
 
-    },100);
+    }, 100); 
 };
+
+// NEW: This listens for the video to finish playing
+document.getElementById('finalVideo').onended = function() {
+    const video = document.getElementById('finalVideo');
+    
+    // Fade the video to black
+    video.style.opacity = "0";
+    
+    // Wait for the fade to finish (1 second), then hide the video entirely 
+    // so Lenhle is back at the birthday letter!
+    setTimeout(() => {
+        video.style.display = "none";
+    }, 1000);
+};
+
 </script>
 
 </body>
